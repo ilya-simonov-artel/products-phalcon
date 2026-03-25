@@ -1,0 +1,52 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+      frontend:
+        condition: service_started
+    volumes:
+      - ./:/var/www/html
+      - frontend-dist:/var/www/html/public/dist
+    restart: unless-stopped
+
+  frontend:
+    image: node:lts
+    working_dir: /var/www/html
+    command: sh -c "if [ ! -d node_modules/vite ]; then npm install; fi && npm run build -- --watch"
+    volumes:
+      - ./:/var/www/html
+      - frontend-node-modules:/var/www/html/node_modules
+      - frontend-dist:/var/www/html/public/dist
+
+  db:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./docker/mysql/initdb.d:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
+volumes:
+  mysql-data:
+  frontend-dist:
+  frontend-node-modules:
