@@ -23,7 +23,8 @@ COPY . . --chown=phalcon:phalcon
 COPY --from=frontend --chown=phalcon:phalcon /app/public/dist/assets ./public/dist/assets
 COPY --from=frontend --chown=phalcon:phalcon /app/public/dist/.vite/manifest.json ./public/dist/manifest.json
 
-COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+
+COPY --chmod=+x docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 EXPOSE 8080
