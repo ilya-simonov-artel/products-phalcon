@@ -1,0 +1,26 @@
+.panel,
+.sidebar,
+.hero {
+  background: var(--panel);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-soft);
+}
+
+.panel {
+  padding: 20px;
+
+  &-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+}
+
+.auth-panel,
+.single-column {
+  max-width: 760px;
+}
