@@ -51,7 +51,7 @@ cp .env.example .env
 ### 2. Сборка и запуск
 
 ```bash
-docker compose up --build
+docker compose up -d --build
 ```
 
 Во время сборки образа выполняется `composer install` c проверкой наличия `vendor/autoload.php`.
